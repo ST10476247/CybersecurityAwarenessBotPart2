@@ -140,7 +140,7 @@ namespace CyberBot
 
             // Return a more detailed tip or another tip for the last topic
             return $"Sure! Since you're interested in {user.FavouriteTopic}, here's some more info: " + 
-                   GetRandomResponse(user.FavouriteTopic + "_extra") ?? $"I've told you quite a bit about {user.FavouriteTopic} already! What else can I help with?";
+                   (GetRandomResponse(user.FavouriteTopic + "_extra") ?? $"I've told you quite a bit about {user.FavouriteTopic} already! What else can I help with?");
         }
 
         private string DetectSentiment(string input, UserProfile user)
@@ -260,3 +260,55 @@ namespace CyberBot
                     "2FA adds a second layer of security beyond just a password.",
                     "Use an authenticator app (Google Authenticator / Authy) for best security.",
                     "Enable 2FA on every account that offers it!"
+                },
+                ["password_extra"] = new[] {
+                    "You should also enable Two-Factor Authentication (2FA) for an extra layer of security.",
+                    "Consider using 'passphrases' — long strings of random words — which are easier for humans to remember."
+                },
+                ["phishing_extra"] = new[] {
+                    "Check for grammatical errors or generic greetings like 'Dear Customer'.",
+                    "Remember that legitimate companies will never ask for your password via email."
+                },
+                ["scam_extra"] = new[] {
+                    "Always look for the 'https' and the padlock icon in your browser.",
+                    "If you're unsure about a website, search for reviews or reports of scams."
+                },
+                ["privacy_extra"] = new[] {
+                    "Using a VPN can help hide your IP address and keep your browsing activity private.",
+                    "Consider using a privacy-focused browser or search engine to reduce tracking."
+                },
+                ["malware_extra"] = new[] {
+                    "Keep your operating system and applications patched and up to date.",
+                    "Back up your data regularly to an offline or cloud location."
+                },
+                ["vpn_extra"] = new[] {
+                    "When accessing work systems remotely, a VPN is highly recommended.",
+                    "A VPN is essential for privacy from your ISP."
+                },
+                ["social_extra"] = new[] {
+                    "Never share personal details like your address or phone number publicly.",
+                    "Log out of social media on shared or public devices."
+                },
+                ["2fa_extra"] = new[] {
+                    "SMS codes are convenient but authenticator apps are more secure.",
+                    "Hardware keys like YubiKey are the most secure form of 2FA."
+                }
+            };
+
+            if (responses.ContainsKey(category))
+            {
+                var list = responses[category];
+                return list[_random.Next(list.Length)];
+            }
+            return null;
+        }
+
+        private string BuildFallbackResponse(string originalInput)
+        {
+            string[] words = originalInput.Trim().Split(' ');
+            string firstWord = words.Length > 0 ? words[0] : "that";
+
+            return $"I'm not sure I understand what you mean by '{firstWord}'. Can you try rephrasing? You can also type 'topics' to see what I can help with.";
+        }
+    }
+}
